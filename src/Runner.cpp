@@ -58,6 +58,10 @@ void Runner::ChildEntry(std::vector<std::string> argv) {
   std::transform(argv.begin(), argv.end(), unpackedArgv.begin(), [](auto s) { return s.c_str(); });
 
   //TODO: prevent starting child processes
-  //TODO: detach stderr
+
+  if (STDERR_FILENO != dup2(STDOUT_FILENO, STDERR_FILENO)) {
+    abort();
+  }
+
   execve(unpackedArgv[0], const_cast<char **>(unpackedArgv.data()), {nullptr});
 }
