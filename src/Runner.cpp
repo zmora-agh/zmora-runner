@@ -9,6 +9,7 @@
 #include <sys/resource.h>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 static double timeEvalToDouble(const timeval &t) {
   return t.tv_sec + t.tv_usec * 1.e-6d;
@@ -55,7 +56,7 @@ void Runner::ChildEntry(std::vector<std::string> argv) {
   assert(argv.size() >= 1);
 
   std::vector<const char *> unpackedArgv(argv.size());
-  std::transform(argv.begin(), argv.end(), unpackedArgv.begin(), [](auto s) { return s.c_str(); });
+  std::transform(argv.begin(), argv.end(), unpackedArgv.begin(), [](const auto& s) { return s.c_str(); });
 
   //TODO: prevent starting child processes
 
