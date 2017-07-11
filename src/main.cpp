@@ -21,9 +21,18 @@ static std::vector<std::string> parsArgs(int argc, char **argv) {
   return args;
 }
 
+static bool handleShowVersion(std::vector<std::string> args) {
+  if(args.size() == 0 || args.front() != "--version" ) return false;
+  std::cout << "Zmora-runner version " << VERSION << std::endl;
+  return true;
+}
+
 int main(int argc, char **argv) {
   Runner r;
-  ProcessStats stats = r.Run(std::move(parsArgs(argc, argv)));
+  auto args = parsArgs(argc, argv);
+  if(handleShowVersion(args)) return 0;
+  
+  ProcessStats stats = r.Run(std::move(args));
   std::cerr << toJson(stats) << std::flush;
   return 0;
 }

@@ -5,4 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_compile_options(-Wall -Werror -Wextra -O3)
 
+if (NOT DEFINED VERSION)
+    string(TIMESTAMP VERSION)
+endif ()
+
 add_subdirectory(src)
