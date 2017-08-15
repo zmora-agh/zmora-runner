@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include <cstdint>
+
 struct ProcessStats {
-  double user_time = 0;
-  double system_time = 0;
-  long max_memory = 0;
+  int64_t user_time = 0;
+  int64_t system_time = 0;
+  int64_t max_memory = 0;
 
   bool terminated_normally = false;
   int exit_code = 0; //valid only if terminated_normally
