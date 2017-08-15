@@ -11,8 +11,8 @@
 #include <algorithm>
 #include <iostream>
 
-static double timeEvalToDouble(const timeval &t) {
-  return t.tv_sec + t.tv_usec * 1.e-6d;
+static int64_t timeEvalToMicros(const timeval &t) {
+  return t.tv_sec * 1000000ll + t.tv_usec;
 }
 
 ProcessStats Runner::Run(std::vector<std::string> argv) {
@@ -31,8 +31,8 @@ ProcessStats Runner::Run(std::vector<std::string> argv) {
   rusage usage;
   getrusage(RUSAGE_CHILDREN, &usage);
 
-  stats.user_time = timeEvalToDouble(usage.ru_utime);
-  stats.system_time = timeEvalToDouble(usage.ru_stime);
+  stats.user_time = timeEvalToMicros(usage.ru_utime);
+  stats.system_time = timeEvalToMicros(usage.ru_stime);
   stats.max_memory = usage.ru_maxrss;
 
   return stats;
