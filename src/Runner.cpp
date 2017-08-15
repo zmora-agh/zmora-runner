@@ -55,8 +55,9 @@ void Runner::WaitForPid(pid_t pid, ProcessStats &stats) {
 void Runner::ChildEntry(std::vector<std::string> argv) {
   assert(argv.size() >= 1);
 
-  std::vector<const char *> unpackedArgv(argv.size());
+  std::vector<const char *> unpackedArgv(argv.size() + 1);
   std::transform(argv.begin(), argv.end(), unpackedArgv.begin(), [](const auto& s) { return s.c_str(); });
+  unpackedArgv.push_back(nullptr);
 
   //TODO: prevent starting child processes
 
