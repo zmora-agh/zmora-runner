@@ -10,12 +10,18 @@
 #include <string>
 #include <vector>
 
+struct Config {
+  bool showVersion = false;
+  uint timeout = 0;
+  std::vector<std::string> childArgv = {};
+};
+
 class Runner {
  public:
-  ProcessStats Run(std::vector<std::string> argv);
+  ProcessStats Run(const Config& config);
  private:
   void WaitForPid(pid_t pid, ProcessStats &stats);
-  void ChildEntry(std::vector<std::string> argvs);
+  void ChildEntry(const std::vector<std::string>& argv);
 };
 
 

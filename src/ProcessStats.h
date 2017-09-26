@@ -12,6 +12,7 @@ struct ProcessStats {
   int64_t max_memory = 0;
 
   bool terminated_normally = false;
+  bool timeouted = false;
   int exit_code = 0; //valid only if terminated_normally
 
 };
