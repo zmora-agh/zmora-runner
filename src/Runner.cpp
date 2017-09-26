@@ -65,5 +65,7 @@ void Runner::ChildEntry(std::vector<std::string> argv) {
     abort();
   }
 
-  execve(unpackedArgv[0], const_cast<char **>(unpackedArgv.data()), {nullptr});
+  char* const envp[] = {nullptr};
+
+  execve(unpackedArgv[0], const_cast<char **>(unpackedArgv.data()), envp);
 }
