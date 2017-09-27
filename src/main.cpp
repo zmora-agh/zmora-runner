@@ -61,20 +61,25 @@ static Config parseArgs(std::vector<std::string>&& vector) {
     }
   }
 
-  if(it == end(vector)) {
-    std::cerr<<"Error: missing program to run"<<std::endl;
-    exit(-1);
-  }
-
   std::move(it, end(vector), back_inserter(config.childArgv));
 
   return config;
+}
+
+static bool validateConfig(const Config& config){
+  if(config.showVersion) return true;
+  if(config.childArgv.empty()) {
+    std::cerr<<"Error: missing program to run"<<std::endl;
+    return false;
+  }
+  return true;
 }
 
 int main(int argc, char **argv) {
   Runner r;
   auto args = convertArgs(argc, argv);
   Config config = parseArgs(std::move(args));
+  if(!validateConfig(config)) return -1;
   if(handleShowVersion(config)) return 0;
 
   ProcessStats stats = r.Run(config);
