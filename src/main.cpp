@@ -39,7 +39,11 @@ static Config parseArgs(std::vector<std::string>&& vector) {
 
     if(*it == "--timeout") {
       try {
-        const auto timeout = stoul(*(++it));
+        if(++it == end(vector)){
+          std::cerr<<"Error: you have to specify timeout"<<std::endl;
+          exit(-1);
+        }
+        const auto timeout = stoul(*it);
         if(timeout > std::numeric_limits<uint>::max()){
           std::cerr<<"Error: timeout is out of range"<<std::endl;
           exit(-1);
