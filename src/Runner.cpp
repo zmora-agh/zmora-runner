@@ -11,20 +11,34 @@
 #include <algorithm>
 #include <iostream>
 
+pid_t childPid = 0;
+bool timeouted = false;
+
+static void handleTimeout(int){
+
+  timeouted = true;
+  kill(childPid, SIGKILL);
+}
+
 static int64_t timeEvalToMicros(const timeval &t) {
   return t.tv_sec * 1000000ll + t.tv_usec;
 }
 
-ProcessStats Runner::Run(std::vector<std::string> argv) {
+ProcessStats Runner::Run(const Config& config) {
+
+  signal(SIGALRM, handleTimeout);
 
   pid_t pid = fork();
   if (0 == pid) {
-    ChildEntry(std::move(argv));
+    ChildEntry(config.childArgv);
   } else if (-1 == pid) {
     abort();
   }
 
-  ProcessStats stats = ProcessStats();
+  childPid = pid;
+  alarm(config.timeout);
+
+  ProcessStats stats{};
 
   WaitForPid(pid, stats);
 
@@ -50,9 +64,10 @@ void Runner::WaitForPid(pid_t pid, ProcessStats &stats) {
     stats.terminated_normally = true;
     stats.exit_code = WEXITSTATUS(status);
   }
+  stats.timeouted = timeouted;
 
 }
-void Runner::ChildEntry(std::vector<std::string> argv) {
+void Runner::ChildEntry(const std::vector<std::string>& argv) {
   assert(argv.size() >= 1);
 
   std::vector<const char *> unpackedArgv(argv.size() + 1);
