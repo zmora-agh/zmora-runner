@@ -6,6 +6,7 @@ pipeline {
 			steps {
 				dir('build'){
 					sh 'cmake ../ && make -j4'
+					archiveArtifacts artifacts: 'src/zmora_runner', fingerprint: true
 				}
 			}
 		}
